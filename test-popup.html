@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Extension Popup Test</title>
+</head>
+<body>
+    <h1>Testing Extension Popup</h1>
+    <iframe src="popup.html" width="400" height="600" style="border: 1px solid #ccc;"></iframe>
+    <script>
+        console.log('Test page loaded');
+        // Check for any JavaScript errors in the popup
+        window.addEventListener('error', function(e) {
+            console.error('JavaScript error detected:', e.error);
+        });
+    </script>
+</body>
+</html>

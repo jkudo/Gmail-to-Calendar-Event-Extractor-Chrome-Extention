@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>拡張機能の設定</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .container {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      max-width: 600px;
+      width: 100%;
+      padding: 40px;
+    }
+
+    h1 {
+      color: #764ba2;
+      margin-bottom: 10px;
+      font-size: 28px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .subtitle {
+      color: #666;
+      margin-bottom: 30px;
+      font-size: 14px;
+    }
+
+    .section {
+      margin-bottom: 30px;
+      padding: 20px;
+      background: #f9f9f9;
+      border-radius: 12px;
+    }
+
+    .section-title {
+      font-size: 18px;
+      color: #333;
+      margin-bottom: 15px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      font-size: 14px;
+      font-weight: 500;
+      color: #555;
+      margin-bottom: 8px;
+    }
+
+    input[type="text"],
+    input[type="password"],
+    select {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 14px;
+      transition: all 0.3s ease;
+    }
+
+    input[type="text"]:focus,
+    input[type="password"]:focus,
+    select:focus {
+      outline: none;
+      border-color: #764ba2;
+      box-shadow: 0 0 0 3px rgba(118, 75, 162, 0.1);
+    }
+
+    .help-text {
+      font-size: 12px;
+      color: #888;
+      margin-top: 6px;
+      line-height: 1.4;
+    }
+
+    .toggle-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 0;
+    }
+
+    .toggle-label {
+      font-size: 14px;
+      font-weight: 500;
+      color: #333;
+    }
+
+    .toggle-switch {
+      position: relative;
+      width: 60px;
+      height: 30px;
+      background: #ccc;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .toggle-switch.active {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
+    .toggle-switch::after {
+      content: '';
+      position: absolute;
+      width: 26px;
+      height: 26px;
+      background: white;
+      border-radius: 50%;
+      top: 2px;
+      left: 2px;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+
+    .toggle-switch.active::after {
+      left: 32px;
+    }
+
+    button {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      margin-right: 12px;
+    }
+
+    .btn-secondary {
+      background: #f5f5f5;
+      color: #333;
+      border: 1px solid #ddd;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+    }
+
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .status {
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      display: none;
+    }
+
+    .status.show {
+      display: block;
+    }
+
+    .status.success {
+      background: #e8f5e9;
+      color: #2e7d32;
+      border: 1px solid #81c784;
+    }
+
+    .status.error {
+      background: #ffebee;
+      color: #c62828;
+      border: 1px solid #ef9a9a;
+    }
+
+    .status.info {
+      background: #e3f2fd;
+      color: #1976d2;
+      border: 1px solid #90caf9;
+    }
+
+    .ai-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .ai-status.enabled {
+      background: #e8f5e9;
+      color: #2e7d32;
+    }
+
+    .ai-status.disabled {
+      background: #ffebee;
+      color: #c62828;
+    }
+
+    .link {
+      color: #764ba2;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .link:hover {
+      text-decoration: underline;
+    }
+
+    .icon {
+      width: 24px;
+      height: 24px;
+    }
+
+    .setup-steps {
+      background: #fff3e0;
+      border: 1px solid #ffb74d;
+      border-radius: 8px;
+      padding: 16px;
+      margin-top: 16px;
+    }
+
+    .setup-steps h3 {
+      color: #e65100;
+      font-size: 14px;
+      margin-bottom: 12px;
+    }
+
+    .setup-steps ol {
+      margin-left: 20px;
+      color: #666;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .setup-steps li {
+      margin-bottom: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>
+      <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 8V12L15 15M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      Gmail to Calendar 設定
+    </h1>
+    <p class="subtitle">拡張機能の詳細設定とAI機能の設定</p>
+
+    <div id="status" class="status"></div>
+
+    <!-- AI設定セクション -->
+    <div class="section">
+      <h2 class="section-title">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M2 17L12 22L22 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M2 12L12 17L22 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        AI機能設定 (Gemini)
+        <span id="aiStatus" class="ai-status disabled">無効</span>
+      </h2>
+
+      <div class="toggle-container">
+        <span class="toggle-label">AI抽出機能を有効にする</span>
+        <div id="aiToggle" class="toggle-switch"></div>
+      </div>
+
+      <div id="aiSettings" style="display: none;">
+        <!-- API選択 -->
+        <div class="form-group">
+          <label>使用するAPI</label>
+          <div style="display: flex; gap: 12px; margin: 12px 0;">
+            <label style="display: flex; align-items: center; cursor: pointer;">
+              <input type="radio" name="apiType" value="gemini" id="useGeminiDirect" checked style="margin-right: 8px;">
+              <span>Gemini API (推奨・簡単)</span>
+            </label>
+            <label style="display: flex; align-items: center; cursor: pointer;">
+              <input type="radio" name="apiType" value="vertex" id="useVertexAI" style="margin-right: 8px;">
+              <span>Vertex AI (高度)</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Gemini API設定 -->
+        <div id="geminiSettings">
+          <div class="form-group">
+            <label for="geminiApiKey">Gemini API Key *</label>
+            <input type="password" id="geminiApiKey" placeholder="AIzaSy...">
+            <p class="help-text">
+              <a href="https://aistudio.google.com/app/apikey" target="_blank" class="link">
+                Google AI Studio
+              </a>
+              でAPIキーを無料で作成できます（個人利用向け）
+            </p>
+          </div>
+
+          <div class="setup-steps">
+            <h3>📋 Gemini API セットアップ手順（簡単）</h3>
+            <ol>
+              <li><a href="https://aistudio.google.com/app/apikey" target="_blank" class="link">Google AI Studio</a>にアクセス</li>
+              <li>Googleアカウントでログイン</li>
+              <li>「Get API key」をクリック</li>
+              <li>「Create API key」をクリック</li>
+              <li>生成されたAPIキーをコピーして上記フィールドに貼り付け</li>
+            </ol>
+            <p style="margin-top: 12px; font-size: 12px; color: #666;">
+              ※ 無料枠：1分間に60リクエストまで
+            </p>
+          </div>
+        </div>
+
+        <!-- Vertex AI設定 -->
+        <div id="vertexSettings" style="display: none;">
+          <div class="form-group">
+            <label for="projectId">Google Cloud Project ID *</label>
+            <input type="text" id="projectId" placeholder="例: my-project-123456">
+            <p class="help-text">Google Cloud ConsoleでプロジェクトIDを確認してください</p>
+          </div>
+
+          <div class="form-group">
+            <label for="vertexApiKey">サービスアカウントキー (JSON) *</label>
+            <textarea id="vertexApiKey" placeholder='{"type": "service_account", ...}' style="height: 100px; font-family: monospace; font-size: 12px;"></textarea>
+            <p class="help-text">
+              <a href="https://console.cloud.google.com/iam-admin/serviceaccounts" target="_blank" class="link">
+                Google Cloud Console
+              </a>
+              でサービスアカウントを作成し、JSONキーをダウンロードしてください
+            </p>
+          </div>
+
+          <div class="setup-steps">
+            <h3>📋 Vertex AI セットアップ手順（高度）</h3>
+            <ol>
+              <li>Google Cloud Consoleでプロジェクトを作成</li>
+              <li>Vertex AI APIを有効化</li>
+              <li>サービスアカウントを作成</li>
+              <li>サービスアカウントに「Vertex AI ユーザー」ロールを付与</li>
+              <li>JSONキーをダウンロード</li>
+              <li>JSONキーの内容を上記フィールドに貼り付け</li>
+            </ol>
+          </div>
+        </div>
+
+        <!-- 共通設定 -->
+        <div class="form-group">
+          <label for="model">AIモデル</label>
+          <select id="model">
+            <option value="gemini-2.5-flash-lite">Gemini 2.5 Flash Lite (最新・推奨)</option>
+            <option value="gemini-1.5-flash">Gemini 1.5 Flash (高速)</option>
+            <option value="gemini-1.5-pro">Gemini 1.5 Pro (高精度)</option>
+            <option value="gemini-1.0-pro">Gemini 1.0 Pro (安定版)</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- 抽出設定セクション -->
+    <div class="section">
+      <h2 class="section-title">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M9 11L12 14L22 4M21 12V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        抽出設定
+      </h2>
+
+      <div class="toggle-container">
+        <span class="toggle-label">複数の予定を自動検出</span>
+        <div id="multiEventToggle" class="toggle-switch active"></div>
+      </div>
+
+      <div class="toggle-container">
+        <span class="toggle-label">会議URLを自動検出</span>
+        <div id="meetingUrlToggle" class="toggle-switch active"></div>
+      </div>
+
+      <div class="toggle-container">
+        <span class="toggle-label">参加者を自動抽出</span>
+        <div id="attendeesToggle" class="toggle-switch"></div>
+      </div>
+
+      <div class="form-group">
+        <label for="confidence">AI抽出の信頼度しきい値</label>
+        <input type="range" id="confidence" min="0" max="100" value="70" style="width: 100%;">
+        <p class="help-text">現在の値: <span id="confidenceValue">70%</span></p>
+      </div>
+    </div>
+
+    <!-- デフォルト設定セクション -->
+    <div class="section">
+      <h2 class="section-title">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M8 7V3M16 7V3M7 11H17M5 21H19C19.5304 21 20.0391 20.7893 20.4142 20.4142C20.7893 20.0391 21 19.5304 21 19V7C21 6.46957 20.7893 5.96086 20.4142 5.58579C20.0391 5.21071 19.5304 5 19 5H5C4.46957 5 3.96086 5.21071 3.58579 5.58579C3.21071 5.96086 3 6.46957 3 7V19C3 19.5304 3.21071 20.0391 3.58579 20.4142C3.96086 20.7893 4.46957 21 5 21Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        デフォルト設定
+      </h2>
+
+      <div class="form-group">
+        <label for="defaultDuration">デフォルトの予定時間（分）</label>
+        <input type="number" id="defaultDuration" min="15" max="480" value="60">
+      </div>
+
+      <div class="form-group">
+        <label for="defaultReminder">デフォルトのリマインダー（分前）</label>
+        <input type="number" id="defaultReminder" min="0" max="10080" value="10">
+      </div>
+
+      <div class="form-group">
+        <label for="calendarId">使用するカレンダー</label>
+        <select id="calendarId">
+          <option value="primary">メインカレンダー</option>
+          <option value="custom">カスタムカレンダー（未実装）</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- ボタン -->
+    <div style="text-align: center; margin-top: 30px;">
+      <button id="saveBtn" class="btn-primary">
+        設定を保存
+      </button>
+      <button id="testBtn" class="btn-secondary">
+        AI接続テスト
+      </button>
+    </div>
+  </div>
+
+  <script src="settings.js"></script>
+</body>
+</html>
