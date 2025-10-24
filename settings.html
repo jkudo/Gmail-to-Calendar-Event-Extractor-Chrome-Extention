@@ -265,6 +265,16 @@
     .setup-steps li {
       margin-bottom: 8px;
     }
+
+    .model-info {
+      background: #e3f2fd;
+      border: 1px solid #90caf9;
+      border-radius: 6px;
+      padding: 10px;
+      margin-top: 10px;
+      font-size: 12px;
+      color: #1976d2;
+    }
   </style>
 </head>
 <body>
@@ -376,11 +386,18 @@
         <div class="form-group">
           <label for="model">AIモデル</label>
           <select id="model">
-            <option value="gemini-2.5-flash-lite">Gemini 2.5 Flash Lite (最新・推奨)</option>
-            <option value="gemini-1.5-flash">Gemini 1.5 Flash (高速)</option>
-            <option value="gemini-1.5-pro">Gemini 1.5 Pro (高精度)</option>
-            <option value="gemini-1.0-pro">Gemini 1.0 Pro (安定版)</option>
+            <option value="gemini-2.5-flash-lite">Gemini 2.5 Flash Lite (高速・推奨)</option>
+            <option value="gemini-2.5-flash">Gemini 2.5 Flash (バランス型)</option>
+            <option value="gemini-2.5-pro">Gemini 2.5 Pro (高精度)</option>
           </select>
+          <p class="help-text">使用するGeminiモデルを選択します。Flash Liteが最も高速です。</p>
+        </div>
+        
+        <div class="model-info">
+          <strong>🤖 モデルの特徴:</strong><br>
+          • <strong>Flash Lite:</strong> 最も高速で軽量。シンプルな予定抽出に最適<br>
+          • <strong>Flash:</strong> 速度と精度のバランス型。複雑な文章にも対応<br>
+          • <strong>Pro:</strong> 最高精度。曖昧な表現の解釈や複数イベントの抽出に優れる
         </div>
       </div>
     </div>
