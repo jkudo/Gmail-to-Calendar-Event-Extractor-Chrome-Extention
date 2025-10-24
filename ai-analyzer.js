@@ -5,7 +5,7 @@ class AIEventAnalyzer {
     // Vertex AI の設定
     this.projectId = 'YOUR_PROJECT_ID'; // Google Cloud Project ID
     this.location = 'asia-northeast1'; // リージョン（東京）
-    this.model = 'gemini-1.5-flash'; // 使用するモデル
+    this.model = 'gemini-2.5-flash-lite'; // 使用するモデル（デフォルト）
     this.apiKey = null; // API Key（設定画面から取得）
     
     // Gemini API直接使用の場合（Alternative）
@@ -23,7 +23,12 @@ class AIEventAnalyzer {
   // API キーの取得
   async getApiKey() {
     // 毎回storageから最新の設定を取得
-    const result = await chrome.storage.local.get(['vertexApiKey', 'geminiApiKey', 'useGeminiDirect', 'projectId']);
+    const result = await chrome.storage.local.get(['vertexApiKey', 'geminiApiKey', 'useGeminiDirect', 'projectId', 'model']);
+    
+    // モデル設定も更新
+    if (result.model) {
+      this.model = result.model;
+    }
     
     // Project IDも更新
     if (result.projectId) {
@@ -52,6 +57,7 @@ class AIEventAnalyzer {
       const apiKey = await this.getApiKey();
       console.log('API key retrieved:', apiKey ? 'Yes' : 'No');
       console.log('Use Gemini Direct:', this.useGeminiDirect);
+      console.log('Selected Model:', this.model);
       
       if (!apiKey) {
         const errorMsg = 'APIキーが設定されていません。設定画面でVertex AIまたはGemini APIキーを設定してください。';
@@ -66,11 +72,11 @@ class AIEventAnalyzer {
       
       if (this.useGeminiDirect) {
         // Gemini API を直接使用
-        console.log('Using Gemini API directly');
+        console.log('Using Gemini API directly with model:', this.model);
         response = await this.callGeminiAPI(prompt, this.geminiApiKey);
       } else {
         // Vertex AI を使用（サービスアカウント認証が必要）
-        console.log('Using Vertex AI');
+        console.log('Using Vertex AI with model:', this.model);
         response = await this.callVertexAI(prompt, apiKey);
       }
       
@@ -86,7 +92,13 @@ class AIEventAnalyzer {
 
   // Gemini API を直接呼び出し
   async callGeminiAPI(prompt, apiKey) {
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${apiKey}`;
+    // storage から最新のモデル設定を取得
+    const result = await chrome.storage.local.get(['model']);
+    const model = result.model || 'gemini-2.5-flash-lite';
+    
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+    
+    console.log(`Calling Gemini API with model: ${model}`);
     
     const response = await fetch(url, {
       method: 'POST',
